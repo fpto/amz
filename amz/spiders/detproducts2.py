@@ -6,7 +6,7 @@ import re
 class DetproductsSpider(scrapy.Spider):
     name = 'detproducts'
     #Use only wishlist data
-    start_urls = ['https://www.amazon.com/hz/wishlist/ls/2TMOBFVZQDJLZ']
+    start_urls = ['https://www.amazon.com/hz/wishlist/ls/32UB18EF9TGA2']
 
     def parse(self, response):
         urls = response.css('h3.a-size-base a::attr(href)').extract()
@@ -28,10 +28,11 @@ class DetproductsSpider(scrapy.Spider):
             'url': response.url ,
             'before_price': response.css('div#price span.a-text-strike::text').extract_first(),
             'price': response.css('span#priceblock_ourprice::text').extract_first(),
-            'color': response.css('div#variation_color_name span::text').extract_first().lstrip().rstrip(),
-            'short_description': response.css('div#feature-bullets ul').extract_first().replace('"', ''),
-            'description': response.css('div#dpx-aplus-product-description_feature_div').extract_first() ,
+            'color': response.css('div#variation_color_name span::text').extract_first(),
+            'short_description': response.css('div#feature-bullets ul').extract_first(),
+            'description': response.css('div#productDescription_feature_div').extract_first() ,
             'SKU': response.url,
+            'specs': response.css('table#productDetails_detailBullets_sections1').extract_first(),
             #'stock': response.css('p.stock::text').extract_first().split(' ', 1)[0],
             'img_urls': re.findall('"hiRes":(.+?),', response.xpath('//*[@id="imageBlock_feature_div"]/script/text()').extract_first(), re.S),
             #'img_urls': ast.literal_eval(response.css('div#imgTagWrapperId img::attr(data-a-dynamic-image)').extract_first().encode('ascii','ignore')).keys(),
